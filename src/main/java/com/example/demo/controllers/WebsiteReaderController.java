@@ -15,20 +15,21 @@ import java.util.Map;
 @RequestMapping("/api/website")
 public class WebsiteReaderController {
 
-   private final WebsiteReaderService websiteReaderService;
+    private final WebsiteReaderService websiteReaderService;
 
     @Autowired
     public WebsiteReaderController(WebsiteReaderService websiteReaderService) {
         this.websiteReaderService = websiteReaderService;
     }
-   @GetMapping("/reader")
-    public ResponseEntity<Map<String, List<String>>>  getDropDownData() {
-       Map<String, List<String>>  dropDownList = websiteReaderService.collectInformation();
-       if(dropDownList!=null && !dropDownList.isEmpty())
-        return ResponseEntity.ok(dropDownList);
-       else
-         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-}
 
+    @GetMapping("/reader")
+    public ResponseEntity<Map<String, List<String>>> getDropDownData() {
+        Map<String, List<String>> dropDownList = websiteReaderService.collectInformation();
+        if (dropDownList != null && !dropDownList.isEmpty()) {
+            return ResponseEntity.ok(dropDownList);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

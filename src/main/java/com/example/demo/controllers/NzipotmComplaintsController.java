@@ -14,17 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class NzipotmComplaintsController {
 
     private final NzipotmComplaintsService nzipotmComplaintsService;
+
     @Autowired
     public NzipotmComplaintsController(NzipotmComplaintsService nzipotmComplaintsService) {
         this.nzipotmComplaintsService = nzipotmComplaintsService;
     }
+
     @GetMapping("/robot")
     public ResponseEntity<Binder> runNzipotmComplaintsRobot() throws InterruptedException {
         Binder outputAfterExecution = nzipotmComplaintsService.runNzipotmComplaintsRobot();
-        if(outputAfterExecution!=null)
+        if (outputAfterExecution != null) {
             return ResponseEntity.ok(outputAfterExecution);
-        else
+        } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
 

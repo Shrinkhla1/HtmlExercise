@@ -52,10 +52,15 @@ public class Docket {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Docket docket = (Docket) o;
-        return Objects.equals(id, docket.id) && Objects.equals(reference, docket.reference) && Objects.equals(courtId, docket.courtId) && Objects.equals(judge, docket.judge);
+        return Objects.equals(id, docket.id) && Objects.equals(reference, docket.reference) && Objects.equals(courtId, docket.courtId) &&
+               Objects.equals(judge, docket.judge);
     }
 
     @Override
@@ -66,10 +71,10 @@ public class Docket {
     @Override
     public String toString() {
         return "Docket{" +
-                "id=" + id +
-                ", reference='" + reference + '\'' +
-                ", courtId=" + courtId +
-                ", judge='" + judge + '\'' +
-                '}';
+               "id=" + id +
+               ", reference='" + reference + '\'' +
+               ", courtId=" + courtId +
+               ", judge='" + judge + '\'' +
+               '}';
     }
 }

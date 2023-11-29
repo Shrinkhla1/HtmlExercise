@@ -43,8 +43,12 @@ public class Party {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Party party = (Party) o;
         return Objects.equals(name, party.name) && Objects.equals(type, party.type) && Objects.equals(representatives, party.representatives);
     }
@@ -57,9 +61,9 @@ public class Party {
     @Override
     public String toString() {
         return "Party{" +
-                "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", representatives=" + representatives +
-                '}';
+               "name='" + name + '\'' +
+               ", type='" + type + '\'' +
+               ", representatives=" + representatives +
+               '}';
     }
 }

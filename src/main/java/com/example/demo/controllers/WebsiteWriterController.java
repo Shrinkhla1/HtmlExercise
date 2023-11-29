@@ -13,17 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebsiteWriterController {
 
     private final WebsiteWriterService websiteWriterService;
+
     @Autowired
     public WebsiteWriterController(WebsiteWriterService websiteWriterService) {
         this.websiteWriterService = websiteWriterService;
     }
+
     @GetMapping("/writer")
     public ResponseEntity<String> getResult() {
         String outputAfterExecution = websiteWriterService.getOutputAfterExecution();
-        if(outputAfterExecution!=null && !outputAfterExecution.isEmpty())
+        if (outputAfterExecution != null && !outputAfterExecution.isEmpty()) {
             return ResponseEntity.ok(outputAfterExecution);
-        else
+        } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

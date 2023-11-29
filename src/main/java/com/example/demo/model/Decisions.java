@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -79,10 +78,15 @@ public class Decisions {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Decisions decisions = (Decisions) o;
-        return Objects.equals(id, decisions.id) && Objects.equals(reference, decisions.reference) && Objects.equals(judgementDate, decisions.judgementDate) && Objects.equals(level, decisions.level) && Objects.equals(nature, decisions.nature) && Objects.equals(robotSource, decisions.robotSource);
+        return Objects.equals(id, decisions.id) && Objects.equals(reference, decisions.reference) && Objects.equals(judgementDate, decisions.judgementDate) &&
+               Objects.equals(level, decisions.level) && Objects.equals(nature, decisions.nature) && Objects.equals(robotSource, decisions.robotSource);
     }
 
     @Override
@@ -93,12 +97,12 @@ public class Decisions {
     @Override
     public String toString() {
         return "Decisions{" +
-                "id=" + id +
-                ", reference='" + reference + '\'' +
-                ", judgementDate=" + judgementDate +
-                ", level='" + level + '\'' +
-                ", nature='" + nature + '\'' +
-                ", robotSource='" + robotSource + '\'' +
-                '}';
+               "id=" + id +
+               ", reference='" + reference + '\'' +
+               ", judgementDate=" + judgementDate +
+               ", level='" + level + '\'' +
+               ", nature='" + nature + '\'' +
+               ", robotSource='" + robotSource + '\'' +
+               '}';
     }
 }

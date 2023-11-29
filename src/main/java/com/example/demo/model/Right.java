@@ -9,7 +9,7 @@ public class Right {
     @JsonProperty("id")
     private Long id;
     @JsonProperty("isOpponent")
-    private boolean isOpponent;
+    private Boolean isOpponent;
     @JsonProperty("classification")
     private Classification classification;
     @JsonProperty("name")
@@ -30,11 +30,11 @@ public class Right {
         this.id = id;
     }
 
-    public boolean isOpponent() {
+    public Boolean isOpponent() {
         return isOpponent;
     }
 
-    public void setOpponent(boolean opponent) {
+    public void setOpponent(Boolean opponent) {
         isOpponent = opponent;
     }
 
@@ -72,10 +72,15 @@ public class Right {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Right right = (Right) o;
-        return Objects.equals(id, right.id) && isOpponent == right.isOpponent && Objects.equals(classification, right.classification) && Objects.equals(name, right.name) && Objects.equals(type, right.type) && Objects.equals(reference, right.reference);
+        return Objects.equals(id, right.id) && isOpponent == right.isOpponent && Objects.equals(classification, right.classification) &&
+               Objects.equals(name, right.name) && Objects.equals(type, right.type) && Objects.equals(reference, right.reference);
     }
 
     @Override
@@ -86,12 +91,12 @@ public class Right {
     @Override
     public String toString() {
         return "Right{" +
-                "id=" + id +
-                ", isOpponent=" + isOpponent +
-                ", classification=" + classification +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", reference='" + reference + '\'' +
-                '}';
+               "id=" + id +
+               ", isOpponent=" + isOpponent +
+               ", classification=" + classification +
+               ", name='" + name + '\'' +
+               ", type='" + type + '\'' +
+               ", reference='" + reference + '\'' +
+               '}';
     }
 }

@@ -42,8 +42,12 @@ public class ApplicantDetails {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ApplicantDetails that = (ApplicantDetails) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address);
     }
@@ -56,9 +60,9 @@ public class ApplicantDetails {
     @Override
     public String toString() {
         return "ApplicantDetails{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", address='" + address + '\'' +
+               '}';
     }
 }

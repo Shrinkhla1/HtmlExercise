@@ -8,61 +8,67 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 
 @Service
 public class WebsiteWriterService {
 
-    protected WebDriver initWebClient() {
+    private static final String URL = "https://leetcode.com/";
+
+    private static final String helloWorldCode = "class HelloWorld { public static void main(String[] args) {System.out.println(\"Hello, World!\"); }}";
+
+    private WebDriver initWebClient() {
         WebDriverManager.chromedriver().setup();
         WebDriver webDriver = new ChromeDriver();
         webDriver.manage().window().maximize();
         return webDriver;
     }
+
     public String getOutputAfterExecution() {
-        WebDriver webDriver =initWebClient();
-        JavascriptExecutor js = (JavascriptExecutor) webDriver;
+        WebDriver webDriver = initWebClient();
+        webDriver.get(URL);
 
-        WebDriverWait wait = new WebDriverWait(webDriver,Duration.ofSeconds(100));
-        webDriver.get("https://leetcode.com/");
-
-        scrollThePage(js,webDriver);
-        selectJavaButtonAndClick(wait,webDriver);
-
-        String finalResult=writeInEditorAndExtractResult(wait,webDriver);
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(100));
+        scrollThePage(webDriver);
+        selectJavaButtonAndClick(wait, webDriver);
+        String computeOutput = writeInEditorAndExtractResult(wait, webDriver);
 
         webDriver.quit();
-        return finalResult;
+        return computeOutput;
     }
 
     private String writeInEditorAndExtractResult(WebDriverWait wait, WebDriver webDriver) {
-        String script = "class HelloWorld { public static void main(String[] args) {System.out.println(\"Hello, World!\"); }}";
-        WebElement codeTextArea = wait.until(ExpectedConditions.
-                elementToBeClickable(By.xpath(".//div[@class='CodeMirror-lines']")));
-
-        Actions actions= new Actions(webDriver);
-        actions.moveToElement(codeTextArea).click().build().perform();
-        actions.keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).sendKeys(Keys.DELETE).build().perform();
-        actions.sendKeys(script).build().perform();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        writeCodeInEditor(wait, webDriver);
 
         WebElement runButton = wait.until(ExpectedConditions.
                 presenceOfElementLocated(By.xpath(".//button[@class='btn btn-success run-code-btn']")));
         runButton.click();
 
-        WebElement output = wait.until(ExpectedConditions.
+        WebElement computeOutput = wait.until(ExpectedConditions.
                 presenceOfElementLocated(By.className("output")));
 
-        return output.getText();
+        return computeOutput.getText().trim();
     }
 
-    private void selectJavaButtonAndClick(WebDriverWait wait,WebDriver webDriver) {
+    private void writeCodeInEditor(WebDriverWait wait, WebDriver webDriver) {
+        WebElement codeTextArea = wait.until(ExpectedConditions.
+                elementToBeClickable(By.xpath(".//div[@class='CodeMirror-lines']")));
+        Actions actions = new Actions(webDriver);
+        actions.moveToElement(codeTextArea).click().build().perform();
+        actions.keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL).sendKeys(Keys.DELETE).build().perform();
+        actions.sendKeys(helloWorldCode).build().perform();
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+
+    private void selectJavaButtonAndClick(WebDriverWait wait, WebDriver webDriver) {
         WebElement javaButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//button[text()='Java']")));
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
         javaButton.click();
     }
 
-    private void scrollThePage(JavascriptExecutor js, WebDriver webDriver) {
+    private void scrollThePage(WebDriver webDriver) {
+        JavascriptExecutor js = (JavascriptExecutor) webDriver;
         js.executeScript("window.scrollBy(0,1500);");
         webDriver.switchTo().frame(0);
     }

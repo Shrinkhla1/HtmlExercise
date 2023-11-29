@@ -1,68 +1,73 @@
 package com.example.demo.service;
 
+import com.example.demo.helper.ErrorCodeException;
+import com.example.demo.model.ErrorCode;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.*;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.springframework.stereotype.Service;
 
-
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class WebsiteReaderService {
-    protected WebClient webClient;
+    private static final BrowserVersion BROWSER_VERSION = BrowserVersion.FIREFOX;
+    private static final String URL = "http://www.clarivate.com/";
 
-    public static final BrowserVersion BROWSER_VERSION = BrowserVersion.FIREFOX;
-    protected void initWebClient() {
+    private static final String ARROW_FORWARD = "arrow_forward";
+    private WebClient webClient;
+
+    private void initWebClient() {
         webClient = new WebClient(BROWSER_VERSION);
         webClient.getOptions().setThrowExceptionOnScriptError(false);
         webClient.getOptions().setJavaScriptEnabled(false);
         webClient.getOptions().setCssEnabled(false);
     }
-    public  Map<String, List<String>>  collectInformation()  {
+
+    public Map<String, List<String>> collectInformation() {
         initWebClient();
         try {
-            final HtmlPage page = webClient.getPage("http://www.clarivate.com/");
-            if(page==null) {
-                throw new RuntimeException("Page not found, check website!");
-            }
-            HtmlElement productsAndServicesLink = page.getFirstByXPath(".//a[@class='nav-link' and text()='Products & Services']");
-            HtmlPage productPage = productsAndServicesLink.click();
-            List<HtmlElement> listOfDropDown = productPage.getByXPath(".//div[@class='subnav-col border-left']");
-            return createResponse(listOfDropDown);
-        }
-        catch(IOException e)
-        {
-            throw new RuntimeException(e);
+            final HtmlPage page = webClient.getPage(URL);
+            DomElement menuElement = page.getElementById("menu-item-7");
+            DomElement productLink = menuElement.getFirstElementChild();
+            HtmlPage productPage = productLink.click();
+            List<HtmlElement> allProductDataList = productPage.getByXPath(".//div[@class='subnav-col border-left']");
+            return createResponse(allProductDataList);
+        } catch (Exception e) {
+            throw new ErrorCodeException(ErrorCode.ERROR_CODE_01);
         }
     }
 
-    private Map<String, List<String>> createResponse(List<HtmlElement> listOfDropDown) {
-        Map<String, List<String>> productServicesMap = new LinkedHashMap<>();
-        listOfDropDown.forEach(element -> {
-            List<HtmlAnchor> htmlAnchor = element.getByXPath(".//a[contains(@href, 'https://clarivate.com/products/') or contains(., 'Consulting & Data')]");
-            List<HtmlAnchor> filteredList = htmlAnchor.stream()
-                    .filter(anchor -> !anchor.getTextContent().contains("arrow_forward\n")
-                    ).toList();
-            final List<String> subcategoryList = new ArrayList<>();
-            String[] heading = {null};
-            filteredList.forEach(anchorElement -> {String title = anchorElement.getTextContent().trim();
-             if (!title.contains("arrow_forward")) {
-                    subcategoryList.add(title);
+    private Map<String, List<String>> createResponse(List<HtmlElement> allProductDataList) {
+        Map<String, List<String>> productHeaderDescriptionMap = new LinkedHashMap<>();
 
-                } else {
-                    heading[0] = title.replace("arrow_forward", "");
-                    if (!subcategoryList.isEmpty()) {
-                        productServicesMap.put(heading[0],new ArrayList<>(subcategoryList));
-                    subcategoryList.clear();
-                }}
+        allProductDataList.forEach(allProductData -> {
+            List<HtmlAnchor> productDataList =
+                    allProductData.getByXPath(".//a[contains(@href, 'https://clarivate.com/products/') or contains(., 'Consulting & Data')]");
+            if (!productDataList.isEmpty()) {
+                productDataList.forEach(productData -> {
+                    createProductHeaderDescriptionMap(productData, productHeaderDescriptionMap);
 
-            });
-            if (heading[0]!=null && !subcategoryList.isEmpty()) {
-                productServicesMap.put(heading[0], new ArrayList<>(subcategoryList));
+                });
             }
         });
-        return productServicesMap;
+        return productHeaderDescriptionMap;
+    }
+
+    private void createProductHeaderDescriptionMap(HtmlAnchor productData, Map<String, List<String>> productHeaderDescriptionMap) {
+        String dataToBeProcessed = productData.getTextContent().trim();
+        if (dataToBeProcessed.contains(ARROW_FORWARD)) {
+            productHeaderDescriptionMap.put(dataToBeProcessed.replace(ARROW_FORWARD, ""),
+                    new ArrayList<>());
+        } else {
+            productHeaderDescriptionMap.get(productHeaderDescriptionMap.keySet().toArray()
+                    [productHeaderDescriptionMap.size() - 1]).add(dataToBeProcessed);
+        }
     }
 }

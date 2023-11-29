@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Classification {
@@ -52,8 +51,12 @@ public class Classification {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Classification that = (Classification) o;
         return Objects.equals(name, that.name) && Objects.equals(type, that.type) && Objects.equals(classId, that.classId) && Objects.equals(image, that.image);
     }
@@ -66,10 +69,10 @@ public class Classification {
     @Override
     public String toString() {
         return "Classification{" +
-                "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", classId='" + classId + '\'' +
-                ", image=" + image +
-                '}';
+               "name='" + name + '\'' +
+               ", type='" + type + '\'' +
+               ", classId='" + classId + '\'' +
+               ", image=" + image +
+               '}';
     }
 }

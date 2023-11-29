@@ -14,14 +14,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class NzipotmComplaintsService {
-    protected  WebClient webClient;
-
+    public static final BrowserVersion BROWSER_VERSION = BrowserVersion.EDGE;
+    protected WebClient webClient;
     @Autowired
     DownloadWriteHelper downloadWriteHelper;
 
-    public static final BrowserVersion BROWSER_VERSION = BrowserVersion.EDGE;
     protected void initWebClient() {
-        webClient =  new WebClient(BROWSER_VERSION);
+        webClient = new WebClient(BROWSER_VERSION);
         webClient.setAjaxController(new NicelyResynchronizingAjaxController());
         webClient.getOptions().setCssEnabled(false);
         webClient.getOptions().setUseInsecureSSL(true);
@@ -32,20 +31,19 @@ public class NzipotmComplaintsService {
 
     public Binder runNzipotmComplaintsRobot() throws InterruptedException {
         initWebClient();
-        NzipotmComplaintsResultTradeMarkPage resultPage=getResultPage();
-        NzoIpoComplaintsResultPage finalPage=resultPage.clickResultPage();
-        Binder binder= finalPage.fetchDataAndMap();
-        finalPage.downloadPdf(binder);
+        NzipotmComplaintsResultTradeMarkPage searchTradeMarkCasePage = searchTradeMarkCases();
+        NzoIpoComplaintsResultPage caseDetailsPage = searchTradeMarkCasePage.fetchCaseDetails();
+        Binder binder = caseDetailsPage.fetchCaseDataAndMapToBinder();
+        caseDetailsPage.downloadPdf(binder);
         downloadWriteHelper.writeBinderToJsFile(binder);
         return binder;
     }
 
-    private NzipotmComplaintsResultTradeMarkPage getResultPage() {
+    private NzipotmComplaintsResultTradeMarkPage searchTradeMarkCases() {
         NzipotmComplaintsSearchTradeMarkPage searchTradeMarkPage = new NzipotmComplaintsSearchTradeMarkPage(webClient);
         searchTradeMarkPage.openWebsite();
-        searchTradeMarkPage.selectStatusAndSelect();
+        searchTradeMarkPage.selectCaseStatusAndSelect();
         return searchTradeMarkPage.searchAndSort();
     }
-
 
 }

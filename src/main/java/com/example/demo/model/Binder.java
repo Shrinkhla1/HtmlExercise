@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
@@ -18,7 +17,7 @@ public class Binder {
     private FirstAction firstAction;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
     @JsonProperty("firstActionDate")
-    private LocalDate  firstActionDate;
+    private LocalDate firstActionDate;
     @JsonProperty("dockets")
     private Docket dockets;
     @JsonProperty("parties")
@@ -58,7 +57,7 @@ public class Binder {
         this.firstAction = firstAction;
     }
 
-    public LocalDate  getFirstActionDate() {
+    public LocalDate getFirstActionDate() {
         return firstActionDate;
     }
 
@@ -108,10 +107,17 @@ public class Binder {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Binder binder = (Binder) o;
-        return Objects.equals(id, binder.id) && Objects.equals(domains, binder.domains) && firstAction == binder.firstAction && Objects.equals(firstActionDate, binder.firstActionDate) && Objects.equals(dockets, binder.dockets) && Objects.equals(parties, binder.parties) && Objects.equals(rights, binder.rights) && Objects.equals(decisions, binder.decisions) && Objects.equals(applicantDetails, binder.applicantDetails);
+        return Objects.equals(id, binder.id) && Objects.equals(domains, binder.domains) && firstAction == binder.firstAction &&
+               Objects.equals(firstActionDate, binder.firstActionDate) && Objects.equals(dockets, binder.dockets) && Objects.equals(parties, binder.parties) &&
+               Objects.equals(rights, binder.rights) && Objects.equals(decisions, binder.decisions) &&
+               Objects.equals(applicantDetails, binder.applicantDetails);
     }
 
     @Override
@@ -122,15 +128,15 @@ public class Binder {
     @Override
     public String toString() {
         return "Binder{" +
-                "id=" + id +
-                ", domains=" + domains +
-                ", firstAction=" + firstAction +
-                ", firstActionDate=" + firstActionDate +
-                ", dockets=" + dockets +
-                ", parties=" + parties +
-                ", rights=" + rights +
-                ", decisions=" + decisions +
-                ", applicantDetails=" + applicantDetails +
-                '}';
+               "id=" + id +
+               ", domains=" + domains +
+               ", firstAction=" + firstAction +
+               ", firstActionDate=" + firstActionDate +
+               ", dockets=" + dockets +
+               ", parties=" + parties +
+               ", rights=" + rights +
+               ", decisions=" + decisions +
+               ", applicantDetails=" + applicantDetails +
+               '}';
     }
 }
